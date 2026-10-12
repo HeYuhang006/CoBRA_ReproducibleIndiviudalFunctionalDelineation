@@ -1,0 +1,12 @@
+numpy
+scipy
+scikit-learn
+nibabel
+matplotlib
+numba
+threadpoolctl
+torch
+boto3
+python-pptx
+shapely
+lxml

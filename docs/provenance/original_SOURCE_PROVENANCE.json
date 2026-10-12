@@ -1,0 +1,296 @@
+[
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/application_data.py",
+    "original_sha256": "ee8b9e7944e35b578864897d73730de4efc1027d201a7f5c1d9ac3ae9d6296ce",
+    "packaged": "Main/01_data/f_application_data.py",
+    "packaged_sha256": "9ac4848f0636601f5feda0cd31e1f66e54871f5d18d3feace7194fdd365d7b80",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/application_metrics.py",
+    "original_sha256": "930b55eec3de6a89b01ea8062f74c3679f1d7af26f8b7cb896a30ed84a4c40fe",
+    "packaged": "Main/06_validation/f_application_metrics.py",
+    "packaged_sha256": "7a1484dbaa80e321950a9fa2a0af709c6c7244faa4a9f3672c0eac1b71147004",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/application_runner.py",
+    "original_sha256": "43c17fb861f9359ad5b69cc3ec5c4fd432e10a0ef5263ae1a2ec905586d7718b",
+    "packaged": "Main/06_validation/f_application_runner.py",
+    "packaged_sha256": "84459d1359f06a7dd828094eba5045cbe93635a52a211bb17d01d301a6c6c89d",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/application_statistics.py",
+    "original_sha256": "29139377ca3792f8311699c9eba697710143d76cdf0084a155ebdba5b18b43a6",
+    "packaged": "Main/06_validation/f_application_statistics.py",
+    "packaged_sha256": "88f3016e7a62b42198bc2fa59ba6af3f3bfde3a3ba33e587d5d3bfa7d0c7a92e",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/connectivity.py",
+    "original_sha256": "b3d7a8fde685b18162f40178f34460094c6d072055e004316bab41fce3c175a8",
+    "packaged": "Main/04_parcellation/f_connectivity.py",
+    "packaged_sha256": "60a4cf1c93329d60442358b962db75817e88cb46e461ae5d8452df1aa3dcc87b",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/data.py",
+    "original_sha256": "46240d3db11ad848b6cc5a8165a8797817c38f05da659b62defae61043df96e4",
+    "packaged": "Main/01_data/f_data.py",
+    "packaged_sha256": "762d96920340c62d3bba79a47f9cd33c92422300f98805a3b8c63e6f3792f4f7",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/distance_fc_vae.py",
+    "original_sha256": "93ab6e7b6ad4f09c525b017c2845897172470fb54ecae697177f0bd56442def3",
+    "packaged": "Main/02_network/f_distance_fc_vae.py",
+    "packaged_sha256": "5d54fc05b9e409fc7c096c35e984150791373f5439be91ddab8d599417e238b7",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/full_fc_vae.py",
+    "original_sha256": "c3d51955d19d7cec285425ccbd10a61d9b9689e570ffe1446f2c9cb5b17fc7f7",
+    "packaged": "Main/02_network/f_full_fc_vae.py",
+    "packaged_sha256": "82cb957696c4c5da2367d28eb1e96dd530a03060f743328f8e8fe59d41716091",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/group_objective.py",
+    "original_sha256": "a6b2688fb35fd0a951a733a925fd4e39f384cc3646a7d000e8192c0953f17542",
+    "packaged": "Main/04_parcellation/f_group_objective.py",
+    "packaged_sha256": "217ae029f66404bf2c23be751804493bfed191aaef74222ee9b0ae8c3ea14a89",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/metrics.py",
+    "original_sha256": "0d6848524462ed1257fb7d8b36be9d84b978d7331950bb3612c7a90a8b6af394",
+    "packaged": "Main/06_validation/f_metrics.py",
+    "packaged_sha256": "23f07b0e693e1f136e049424fc23aec0fef62f73f4ca803ae6ed90c555f48e42",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/model_ops.py",
+    "original_sha256": "612448f1768ac303428abefcc14eaa5c4af1aea05d3eb5beb687af3b4da8c799",
+    "packaged": "Main/02_network/f_model_ops.py",
+    "packaged_sha256": "fb2ef0b5aec413634f16a030ce94b8e9326a403198c1ebe76c69085073313bc9",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/pipeline.py",
+    "original_sha256": "f11c6ce93075e652ada732d215fda7a933490065324ad1033ee6b3d8a2d11ddf",
+    "packaged": "Main/05_individual/f_pipeline.py",
+    "packaged_sha256": "2da9054110bae4d3abc06fdb1b09bb9bcf177bdc2a530bb68cfec674b76d691b",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/plotting.py",
+    "original_sha256": "b376c7aede19c3ee27e4dd4c62258adc3e207ffb94e7428bdcd0837b6b6daf0b",
+    "packaged": "Main/07_figures/f_plotting.py",
+    "packaged_sha256": "3ff6dec4dbbd67b23d8bf070dade2a65fd063309743a8f4c1a5c84ff109d88a3",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/priors.py",
+    "original_sha256": "f33eb8d1061cd8f9e049c3edd983a8ff186bdf14e305cc2202c43815f81e2216",
+    "packaged": "Main/04_parcellation/f_priors.py",
+    "packaged_sha256": "2ca8010fd34962d55c037f1eb10197b857b07c4a532a91d7b1a57d0e3099a8af",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/surface_prior_vae.py",
+    "original_sha256": "2dcf9006c3be9411901c9a1db8bfccdc68b4db43d12ca16feccd37d1f5ac216d",
+    "packaged": "Main/02_network/f_surface_prior_vae.py",
+    "packaged_sha256": "190ce106fa89e43d6e2f7af66ca69043058adcadcffab27bd738a2f41c297ef7",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/test_application.py",
+    "original_sha256": "172dd974ffe31abea8438313eb0d9e06efd65372d83d7b969eed3ba23c2b01f8",
+    "packaged": "Main/06_validation/f_test_application.py",
+    "packaged_sha256": "965a7b3c6b0c7668160d3ed526d06d64851e39166e9d7b1699d5a5ca8ab9c65e",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/test_pipeline.py",
+    "original_sha256": "75a3fd3237cdd6470ae7a82f2ba58e4d9a4a9e6d20023c1e1918815b239faede",
+    "packaged": "Main/06_validation/f_test_pipeline.py",
+    "packaged_sha256": "70c4d3dd0446121e383aa5ccb6b6d4d809c44e9197ea1221b4b34e8f2ab60cc8",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/audit_modulated_cohort.py",
+    "original_sha256": "4af623da6a7877ec78822c3c16d441c2eeaf45e6e42f5853acf64294bdb3a168",
+    "packaged": "Main/03_population/f_population_audit_modulated_cohort.py",
+    "packaged_sha256": "462b4e4d43c5bff7b829c1894dcc2bdab49964f084de93ea8fdbde4e6e2a8204",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/distance_fc_vae.py",
+    "original_sha256": "9b51570646e26b15abfc97a075a0540c1954a2c80b83a891ce1fc24636662576",
+    "packaged": "Main/03_population/f_population_distance_fc_vae.py",
+    "packaged_sha256": "e4e63cd66f23c143f89315b10e012df6de449bad505537f48abe35eeb8d52afc",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/drfc.py",
+    "original_sha256": "c774c7693a2b003a24befd2c6eaecdb3810303d8907dc8781d3b4c6981a0970f",
+    "packaged": "DRFC/02_network/f_population_drfc.py",
+    "packaged_sha256": "4d2b9966ea519bbd570fe00f18669614eb4a2cb3b73b11fdd253a6069124bd9f",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/export_group.py",
+    "original_sha256": "c526c59eb5f95b4cb4f637731e438906eab386cc678273fd8b209c2ebdd7a700",
+    "packaged": "Main/03_population/f_population_export_group.py",
+    "packaged_sha256": "0b4ef7fd0b03753f6f2f338efc69c23612bfd0034b39939c1a91153208f58379",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/full_fc_vae.py",
+    "original_sha256": "03f5eb528bdd6d3c40f1c51ddc073b81f98278c7d1c06596c2c6c3690ff44eda",
+    "packaged": "Main/03_population/f_population_full_fc_vae.py",
+    "packaged_sha256": "ab695e6f1b1bf9101725b6da7a25baa3b1dd1e8ee180cd7a10e1348d669679d8",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/prepare_fullfc_distance.py",
+    "original_sha256": "a54102d9fb5fd205c81f7d74ebb5fd1507bf12ba96e9597e22a708d1c431dedc",
+    "packaged": "Main/03_population/f_population_prepare_fullfc_distance.py",
+    "packaged_sha256": "2669118ea8f71b62201586cb90fd02b38e8f836bed8a673806c00eed110e9f6f",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/run.py",
+    "original_sha256": "d54f74b30ab3294a8747f43f3e493655fcb94475d42a5f8fa342429866c1e7b4",
+    "packaged": "DRFC/01_data/f_population_run.py",
+    "packaged_sha256": "90b5c6535a4238860a4685acb4dfc6327a9058c145178f583de5707c62643b71",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/surface_prior_vae.py",
+    "original_sha256": "0047431de14151597f4f084e6ef8c69d502e1c047efb0f3213db671360ef4a1d",
+    "packaged": "Main/03_population/f_population_surface_prior_vae.py",
+    "packaged_sha256": "d276bef2d06648a8f913c2e77431226a76543612122fc86cd1237a1e853e5e6e",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/task_metrics.py",
+    "original_sha256": "b8939ae2ecbfe9113eff01efbe63149d0699061ae2aad36b1a355b3e4f197a82",
+    "packaged": "DRFC/01_data/f_population_task_metrics.py",
+    "packaged_sha256": "a6e2a10eb30d4d3adf669105cf04f213609aacea9c60f8dad318d554fe09f7a9",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/train_distance_fullfc.py",
+    "original_sha256": "796e1668a7e01950dabd046160f93a424e5613a1c3679dd0c62e472a49577cd5",
+    "packaged": "Main/03_population/f_population_train_distance_fullfc.py",
+    "packaged_sha256": "058ad283ad01eec767d0a627ce6ec8c917d3445ef9d726bba9770085938f1872",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/train_fullfc_vae.py",
+    "original_sha256": "93ccad2b065478c737a18bb35e827c4a3bff238fd4d6074b0c5613b6bed28307",
+    "packaged": "Main/03_population/f_population_train_fullfc_vae.py",
+    "packaged_sha256": "8faaf8ce523573fad7839f41f01bcf9932dbc3112cd6c732bbf6f4f50ce67108",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/final/population_training/train_modulated_vae.py",
+    "original_sha256": "de1f081af61e95b2bfda25b6f9bcdd13621a3f8d492621e992d19b1d2abba9f1",
+    "packaged": "Main/03_population/f_population_train_modulated_vae.py",
+    "packaged_sha256": "5a75b518f4e01ad013d6bb5e2c6423252922d9cd1b5dfd03e7521f3933d3ab4b",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/paper_figure_campaign/exact_fc_adaptation.py",
+    "original_sha256": "095434e8855b747ef67463b922779cc935587f2900e3a1cd26ed0e45d7095020",
+    "packaged": "Main/05_individual/f_exact_fc_adaptation.py",
+    "packaged_sha256": "0ef91d66de058a2ab8ab14aa89bf7a34e7d257f2a010f9e46476ef6a4d46feeb",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/paper_figure_campaign/controlled_adaptation.py",
+    "original_sha256": "7d6059c613e56bdacd073c79bcdf2afbbed5d85cc312ed3d0dcb59c982d82f72",
+    "packaged": "Main/05_individual/f_controlled_adaptation.py",
+    "packaged_sha256": "4f31f98e5111817c7c2e5c6e0484cec84eec30711712e53c717fe167c6d9c756",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/paper_figure_campaign/individual_baselines_3timepoints.py",
+    "original_sha256": "f493edf404252e14cb8f4e6dfe8aca51fdb9717fba46eddabda4b5e04db8fa50",
+    "packaged": "TraditionalMethod/07_figures/f_individual_baselines_3timepoints.py",
+    "packaged_sha256": "35ba5e8bc59b21043e15ee87f48953fa59b9435e135a07f3e6f1245203f5bd93",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/paper_figure_campaign/published_baselines_matched36.py",
+    "original_sha256": "4ff668cb49d3cedf254f005d30874488a73820d8a0980e97183129a6ba979471",
+    "packaged": "Wang_style/07_figures/f_published_baselines_matched36.py",
+    "packaged_sha256": "5d9afb71f2c780046b106bfd3d5806261f577a0a5d1c046ce4e9f6978546731a",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/validation_recovery_20261008/code/validation_exact_runtime.py",
+    "original_sha256": "bd08c934ef9afcde791335a24cd978abc9afe4dd9e043ab90838a5477702ef09",
+    "packaged": "Main/05_individual/f_validation_exact_runtime.py",
+    "packaged_sha256": "dbdd28603d69d12fbb31f158ab56bc69a88709ab77313b1dbf8df20c73f1c9d2",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/coarse_network18_20261008/code/coarse_network18.py",
+    "original_sha256": "a0e62f5003b28a265e7c1f9ea824188a34e4578c731fc8b6c6c80927531d59a2",
+    "packaged": "Wang_style/05_individual/f_network18_coarse_network18.py",
+    "packaged_sha256": "fe7191cdb4022f728783da64c7248f1e4e196482c1b8848ee6f4e4c0e5d01816",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/coarse_network18_20261008/code/cobra_network18.py",
+    "original_sha256": "f194d770d3bf38e191cb01d8269a51d593cf36e24d289f3d500f7024c170c7fb",
+    "packaged": "Main/05_individual/f_network18_cobra_network18.py",
+    "packaged_sha256": "a0b863406fa7f0aedfcd203fb19b196a6c555f6c2dfde6f87b4df210c05b6e8d",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/coarse_network18_20261008/code/subject_specificity.py",
+    "original_sha256": "68263ea73f0b1a2daacefbaad7e0e84880ce7554720da14298bc453959294764",
+    "packaged": "Wang_style/05_individual/f_network18_subject_specificity.py",
+    "packaged_sha256": "7c0fcb9488269773f66a211729c7fc07be67942b66fe1b1d3cacc7594ba1e9ab",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/gpip_author_20261009/code/workflow.py",
+    "original_sha256": "927203e7a7818ed91b2ffa83ff5b39b10a32f922abcf7d8f28685a46dfec518e",
+    "packaged": "GPIP/05_individual/f_gpip_workflow.py",
+    "packaged_sha256": "e958c91299912fc38a849af9c72dab0ba93144dfe4b9813fbe811c0a9d82f468",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/gpip_author_20261009/code/subject_specificity.py",
+    "original_sha256": "68263ea73f0b1a2daacefbaad7e0e84880ce7554720da14298bc453959294764",
+    "packaged": "GPIP/05_individual/f_gpip_subject_specificity.py",
+    "packaged_sha256": "7c0fcb9488269773f66a211729c7fc07be67942b66fe1b1d3cacc7594ba1e9ab",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/task_validation/download.py",
+    "original_sha256": "43915612eac183dd81314116937038a05c9f0319b0dbffb1524c10d046879d0b",
+    "packaged": "Main/06_validation/f_task_download.py",
+    "packaged_sha256": "c3c0a0e8fa31ae297ab401b882665ed0a97b43f9b13db1830e5556b811c833ea",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/task_validation/evaluate.py",
+    "original_sha256": "7e8b20f8c8f34c1672e1f644b749d82429ffa4651e5b3fc3065e6162d37e2879",
+    "packaged": "Main/06_validation/f_task_evaluate.py",
+    "packaged_sha256": "2981abd7a879593be1e4c314bf37c85c348faf41291e01cb457ee4d83c1f0c2b",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  },
+  {
+    "source": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/task_validation/extension/metrics.py",
+    "original_sha256": "087b166f5ecdb0cb83ad0b491b803f94e187f9f2b982c2dbc210006130f13007",
+    "packaged": "Main/06_validation/f_task_extension_metrics.py",
+    "packaged_sha256": "2bffae9856201bb2e7e58bcd6bb21f17df809274577315f58cdf9b4814bd1179",
+    "changes": "AST module/top-level function renaming; configurable workspace; disable historical cache/checkpoint reuse"
+  }
+]

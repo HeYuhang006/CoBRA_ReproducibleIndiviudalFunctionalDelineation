@@ -1,0 +1,45 @@
+{
+  "name": "fullfc450_crossday_v1",
+  "comparison_run": "modulated_vae_full_crossday_v1",
+  "gpu": "0",
+  "gpu_memory_fraction": 0.34,
+  "minimum_start_free_GiB": 10,
+  "hemispheres": [
+    "L",
+    "R"
+  ],
+  "train_limit": null,
+  "validation_limit": null,
+  "attention_patches": 128,
+  "fc_block_size": 512,
+  "reference_checkpoint_subjects": 50,
+  "parcels_per_hemisphere": 50,
+  "width": 64,
+  "latent_dim": 32,
+  "attention_layers": 2,
+  "group_steps": 1000,
+  "individual_epochs": 50,
+  "validation_every": 5,
+  "checkpoint_subjects": 50,
+  "donors_per_validation_subject": 3,
+  "learning_rate_group": 0.0003,
+  "learning_rate_individual": 0.0001,
+  "prior_kl_weight": 0.005,
+  "alignment_weight": 0.05,
+  "homogeneity_weight": 0.1,
+  "seed": 20260930,
+  "bandpass_hz": [
+    0.01,
+    0.1
+  ],
+  "distance_residualization": false,
+  "group_reference_sessions": [
+    "rfMRI_REST1_LR"
+  ],
+  "individual_sessions": [
+    "rfMRI_REST1_LR",
+    "rfMRI_REST2_LR"
+  ],
+  "notes": "All same-hemisphere vertices are FC references; no BOLD reference-patch averaging. Exact FC linear projection and all-entry chunked reconstruction. Keep original 128 spatial Transformer tokens, cohort and objectives for comparison. Cached filtered timecourses are float16, restandardized in float32.",
+  "use_verified_practice_cache": false
+}

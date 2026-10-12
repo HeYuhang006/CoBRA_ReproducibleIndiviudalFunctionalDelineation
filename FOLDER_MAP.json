@@ -1,0 +1,10 @@
+{
+  "Main": "CoBRA: 01_data, 02_network, 03_population, 04_parcellation, 05_individual, 06_validation, 07_figures",
+  "DRFC": "MICCAI26/DRFC group reference, same stage layout",
+  "Wang_style": "HFR18 author arithmetic port and separately labeled adapted100",
+  "GPIP": "Author GPIP adapters, source hash manifest and manual stages; external author package required",
+  "TraditionalMethod": "PCA64/KMeans, spatial Ward, group NMF; separate RNCut production experiment snapshot",
+  "Common": "Shared CLI, safe fresh-output setup, data rebuilding, comparisons and editable figures",
+  "configs": "Editable host paths, frozen hyperparameters and cohort identity metadata",
+  "docs": "Experiment scope, external setup, original provenance and production helper snapshots"
+}

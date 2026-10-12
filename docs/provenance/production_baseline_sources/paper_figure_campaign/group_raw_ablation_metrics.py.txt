@@ -1,0 +1,97 @@
+"""Add the raw CoBRA group clustering to the same50-person evaluation."""
+import os
+os.environ.setdefault('OMP_NUM_THREADS','4');os.environ.setdefault('OPENBLAS_NUM_THREADS','4')
+from pathlib import Path
+import sys,json,time,traceback,fcntl
+import numpy as np
+import torch
+import nibabel as nib
+from scipy import signal
+W=Path('/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace')
+sys.path.insert(0,str(W/'paper_figure_campaign'));import group_subject_boxplot_experiment as G
+OUT=W/'runs/group_raw_ablation_boxplots_20261008_v1';BASE=W/'runs/group_subject_boxplots_20261008_v1'
+
+def coefficients(distance,labels):
+    ii=[];jj=[];bb=[]
+    for begin in range(0,len(distance),256):
+        d=np.asarray(distance[begin:begin+256]);i,j=np.nonzero((d>0)&(d<=35));keep=j>i+begin;i=i[keep];j=j[keep]
+        ii.append((i+begin).astype('int32'));jj.append(j.astype('int32'));bb.append((np.ceil(d[i,j])-1).astype('uint8'))
+    i,j,b=np.concatenate(ii),np.concatenate(jj),np.concatenate(bb);out=[]
+    for v in labels.values():
+        cat=b+35*(v[i]==v[j]).astype('uint8');counts=np.bincount(cat,minlength=70).astype('float64')
+        within,between=counts[35:],counts[:35];ok=(within>0)&(between>0);w=np.zeros(35)
+        w[ok]=within[ok]*between[ok]/(within[ok]+between[ok]);w/=w.sum()
+        lut=np.r_[-np.divide(w,between,out=np.zeros(35),where=between>0),np.divide(w,within,out=np.zeros(35),where=within>0)]
+        out.append(lut[cat])
+    return i,j,b,np.stack(out)
+
+def binwise_reference(values,b,within):
+    cw=np.bincount(b[within],minlength=35).astype('float64');cb=np.bincount(b[~within],minlength=35).astype('float64')
+    ok=(cw>0)&(cb>0);w=np.zeros(35);w[ok]=cw[ok]*cb[ok]/(cw[ok]+cb[ok]);w/=w.sum()
+    sw=np.bincount(b[within],weights=values[within],minlength=35);sb=np.bincount(b[~within],weights=values[~within],minlength=35)
+    return float(np.sum(w[ok]*(sw[ok]/cw[ok]-sb[ok]/cb[ok])))
+
+def filtered_left(rec,n,columns):
+    source=rec['source'];cache=source.get('cache')
+    if cache:
+        # Already source/filter-verified for this same participant by the completed run.
+        y=np.array(np.load(cache,mmap_mode='r')[:,:n],copy=True,dtype='float32')
+        return y,dict(reused_verified_cache=cache,original_verification=source)
+    image=nib.load(source['source']);assert np.array_equal(columns,np.arange(columns[0],columns[-1]+1))
+    y=np.asarray(image.dataobj[:,int(columns[0]):int(columns[-1])+1],dtype='float32')
+    tr=float(image.header.get_axis(0).step);sos=signal.butter(3,[.01,.1],btype='bandpass',fs=1/tr,output='sos')
+    pad=min(int(3/tr/.01)|1,len(y)-1);out=np.empty_like(y)
+    for a in range(0,n,4096):
+        x=signal.detrend(y[:,a:a+4096].astype('float64'),axis=0);x=signal.sosfiltfilt(sos,x,axis=0,padlen=pad)
+        out[:,a:a+4096]=((x-x.mean(0))/x.std(0).clip(1e-8)).astype('float32')
+    return out,dict(source=source['source'],bandpass_Hz=[.01,.1],same_filter_and_standardization=True,read_left_columns_only=True)
+
+def main():
+    OUT.mkdir(exist_ok=True);lock=(OUT/'workflow.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    torch.set_num_threads(4);torch.cuda.set_per_process_memory_fraction(.08);torch.backends.cuda.matmul.allow_tf32=False
+    s=json.load(open(BASE/'summary.json'));mask=np.load(BASE/'evaluation_mask_L.npy');ids=np.flatnonzero(mask)
+    mp=np.load(G.D/'mapping.npz');n=len(mp['L_vertices']);maps=np.load(OUT/'raw_group_maps.npz')
+    labels={};base_maps=np.load(BASE/'group_labels.npz')
+    for k in [100,200,300,400]:
+        labels[f'Schaefer_{k}']=G.atlas_labels(k//2,'L',mp['L_vertices'])[mask]
+        labels[f'DRFC_{k}']=base_maps[f'DRFC_{k}'][mask]
+        labels[f'CoBRA_raw_{k}']=maps[f'CoBRA_raw_{k}'][mask]
+        labels[f'CoBRA_{k}']=base_maps[f'CoBRA_{k}'][mask]
+    G.save(OUT/'status.json',dict(state='running',phase='float64_common_pair_coefficients',updated_unix=time.time()))
+    d=np.load(G.D/'distances_L.npy',mmap_mode='r')[np.ix_(ids,ids)];ii,jj,bins,coef=coefficients(d,labels);del d
+    order=np.argsort(ii,kind='stable');ii,jj,bins,coef=ii[order],jj[order],bins[order],coef[:,order]
+    reports=[]
+    for index,rec in enumerate(s['participants']):
+        target=OUT/'participants'/f'{rec["subject"]}.json'
+        if target.exists():reports.append(json.load(open(target)));continue
+        G.save(OUT/'status.json',dict(state='running',index=index+1,total=50,subject=rec['subject'],phase='verified_left_timeseries_load',updated_unix=time.time()))
+        y,provenance=filtered_left(rec,n,mp['L_columns']);y=y[:,mask];y-=y.mean(0);y/=y.std(0).clip(1e-8)
+        y=torch.as_tensor(np.ascontiguousarray(y),device='cuda');gram=y@y.T
+        norm=((y*(gram@y)).sum(0).clamp_min(1e-12).sqrt()/len(y));r=dict(subject=rec['subject'],source=provenance,metrics={})
+        for name,v in labels.items():
+            r['metrics'][name]=G.low_rank_metrics(y,v,gram,norm) if name.startswith('CoBRA_raw') or name=='DRFC_100' else {}
+        values=np.empty(len(ii),dtype='float32')
+        for begin in range(0,len(ids),256):
+            end=min(begin+256,len(ids));a,b=np.searchsorted(ii,[begin,end]);block=y[:,begin:end].T@y/len(y)
+            values[a:b]=block[torch.as_tensor(ii[a:b]-begin,device='cuda',dtype=torch.long),torch.as_tensor(jj[a:b],device='cuda',dtype=torch.long)].cpu().numpy()
+        for name,value in zip(labels,coef@values.astype('float64')):r['metrics'][name]['DCBC_x100']=float(value*100)
+        check={metric:abs(r['metrics']['DRFC_100'][metric]-rec['metrics']['DRFC_100'][metric]) for metric in ['homogeneity','cosine_silhouette']}
+        assert max(check.values())<2e-6,(rec['subject'],check)
+        official=binwise_reference(values,bins,labels['DRFC_100'][ii]==labels['DRFC_100'][jj])
+        assert abs(official-r['metrics']['DRFC_100']['DCBC_x100']/100)<1e-9
+        r['DCBC_float64_binwise_validation_error']=abs(official-r['metrics']['DRFC_100']['DCBC_x100']/100)
+        r['legacy_float32_DCBC_x100_difference']=r['metrics']['DRFC_100']['DCBC_x100']-rec['metrics']['DRFC_100']['DCBC_x100']
+        r['same_data_DRFC_reference_absolute_errors']=check
+        del y,gram,norm,values;torch.cuda.empty_cache();G.save(target,r);reports.append(r)
+        G.save(OUT/'progress.json',dict(completed=index+1,total=50,subject=rec['subject'],updated_unix=time.time()))
+        print('RAW_ABLATION_COMPLETE',index+1,rec['subject'],check,flush=True)
+    G.save(OUT/'summary.json',dict(state='complete',participants=reports,n=50,
+        evaluated_support='identical existing50-person common assigned mask',bandpass_Hz=[.01,.1],
+        original_group_evaluation=str(BASE),same_data_reference='DRFC100 H and FC silhouette reproduced within2e-6; all selected-method DCBCs recomputed with common float64 coefficients/accumulation, independently validated against binwise official weighting within1e-9',
+        labels_sha256=G.digest(OUT/'raw_group_maps.npz'),implementation_sha256=G.digest(Path(__file__))))
+    G.save(OUT/'status.json',dict(state='complete',participants=50,updated_unix=time.time()))
+
+if __name__=='__main__':
+    try:main()
+    except Exception as e:G.save(OUT/'status.json',dict(state='failed',error=repr(e),traceback=traceback.format_exc()));raise
+

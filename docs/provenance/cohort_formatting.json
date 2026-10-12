@@ -1,0 +1,34 @@
+[
+  {
+    "path": "configs/cohorts/development.json",
+    "logical_contents_unchanged": true,
+    "original_bytes": 168588,
+    "release_bytes": 144516,
+    "original_sha256": "58d843d2887152a94884f82447f72d905a5b30f5744f45aebf3834f6af84baec",
+    "release_sha256": "a2da108e6ea9218b065427392710cb54a3518951390ce9428271ded5b2636b0a"
+  },
+  {
+    "path": "configs/cohorts/population.json",
+    "logical_contents_unchanged": true,
+    "original_bytes": 181967,
+    "release_bytes": 154644,
+    "original_sha256": "f0846a6ddda88f9c208fec1cd6ecb4d2a77b57ded7ac627108542103fdf0886d",
+    "release_sha256": "33cb3b14e5ef4af302a5e586477b37835ab53887b632c4861bc2d42e2922e4c3"
+  },
+  {
+    "path": "configs/cohorts/splits.json",
+    "logical_contents_unchanged": true,
+    "original_bytes": 500752,
+    "release_bytes": 453458,
+    "original_sha256": "543d3898a7d26d7e4339f28ac738800c3426f0e47dd512a93abd5b370e888fd2",
+    "release_sha256": "48f2df93f578a1019e7e94cc6a038419a6e907d7ff544516451c2e01e721460d"
+  },
+  {
+    "path": "configs/cohorts/validation.json",
+    "logical_contents_unchanged": true,
+    "original_bytes": 4851701,
+    "release_bytes": 2881038,
+    "original_sha256": "0530084a6d7f95b893c4b040355404f778c2283d607fc7613d2c989d58553e49",
+    "release_sha256": "be6473753ea03c79ecac95c813220c47e58df49c7cbfb461d94198246beb1b2f"
+  }
+]

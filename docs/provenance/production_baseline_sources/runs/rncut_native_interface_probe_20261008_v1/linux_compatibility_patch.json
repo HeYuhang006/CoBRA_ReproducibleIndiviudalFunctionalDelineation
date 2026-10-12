@@ -1,0 +1,10 @@
+{
+  "source": "author GCO sources",
+  "changes": [
+    "mxCreateReference(dc/sc) -> mxDuplicateArray(dc/sc); memory ownership only",
+    "CXXFLAGS -fpermissive for legacy dependent-base template lookup",
+    "duplicated cost arrays made persistent across MEX calls",
+    "solver references persistent duplicate data, not transient caller arrays"
+  ],
+  "algorithmic_objective_unchanged": true
+}

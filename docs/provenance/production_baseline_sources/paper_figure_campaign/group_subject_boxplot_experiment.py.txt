@@ -1,0 +1,224 @@
+"""Independent full-FC NMF baseline and held-out participant-level atlas metrics.
+
+FC-profile silhouette is computed exactly from the time-series factorization,
+without materializing the N-by-N FC matrix. No VAE features enter NMF.
+"""
+import os
+os.environ.setdefault('OMP_NUM_THREADS','4')
+os.environ.setdefault('OPENBLAS_NUM_THREADS','4')
+from pathlib import Path
+import sys,json,time,argparse,fcntl,hashlib,traceback
+import numpy as np
+import torch
+from sklearn.cluster import KMeans
+from scipy.stats import wilcoxon
+from threadpoolctl import threadpool_limits
+W=Path('/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace')
+sys.path.insert(0,str(W))
+from run import filtered_timeseries
+from baselines import atlas_labels
+from drfc import functional_homogeneity,exact_cosine_silhouette,dcbc_from_standardized_fc
+D=W/'runs/full500_MSMAll_samplez'
+OUT=W/'runs/group_subject_boxplots_20261008_v1'
+SEED=20261008
+
+def save(path,obj):
+    path.parent.mkdir(parents=True,exist_ok=True)
+    tmp=path.with_suffix('.partial.json');tmp.write_text(json.dumps(obj,indent=2,allow_nan=False));tmp.replace(path)
+
+def status(phase,**kw):
+    save(OUT/'status.json',dict(state='running',phase=phase,pid=os.getpid(),updated_unix=time.time(),**kw))
+
+def digest(path):
+    sha=hashlib.sha256()
+    with path.open('rb') as f:
+        for block in iter(lambda:f.read(2**22),b''):sha.update(block)
+    return sha.hexdigest()
+
+@torch.no_grad()
+def fit_nmf(device):
+    folder=OUT/'NMF';folder.mkdir(parents=True,exist_ok=True)
+    if (folder/'complete.json').exists():return
+    status('NMF_training_FC_load')
+    x=torch.as_tensor(np.load(D/'fc_train_L.npy',mmap_mode='r'),device=device)
+    negative=sum(int((x[i:i+256]<0).sum()) for i in range(0,len(x),256))/x.numel()
+    x.clamp_min_(0);x.fill_diagonal_(0)
+    n=x.shape[0];rank=32;torch.manual_seed(SEED)
+    status('NMF_NNDSVDa_initialization')
+    q=torch.linalg.qr(x@torch.randn(n,rank+10,device=device),mode='reduced').Q
+    for _ in range(2):q=torch.linalg.qr(x@q,mode='reduced').Q
+    ub,s,vh=torch.linalg.svd(q.T@x,full_matrices=False);u=q@ub
+    f=torch.zeros(n,rank,device=device);g=torch.zeros(rank,n,device=device)
+    f[:,0]=torch.sqrt(s[0])*u[:,0].abs();g[0]=torch.sqrt(s[0])*vh[0].abs()
+    for j in range(1,rank):
+        up,un=u[:,j].clamp_min(0),(-u[:,j]).clamp_min(0)
+        vp,vn=vh[j].clamp_min(0),(-vh[j]).clamp_min(0)
+        np_,nn=torch.linalg.vector_norm(up)*torch.linalg.vector_norm(vp),torch.linalg.vector_norm(un)*torch.linalg.vector_norm(vn)
+        a,b,weight=(up,vp,np_) if np_>=nn else (un,vn,nn)
+        f[:,j]=torch.sqrt(s[j]*weight)*a/torch.linalg.vector_norm(a).clamp_min(1e-12)
+        g[j]=torch.sqrt(s[j]*weight)*b/torch.linalg.vector_norm(b).clamp_min(1e-12)
+    mean=x.mean();f[f<1e-7]=mean;g[g<1e-7]=mean
+    del q,u,ub,s,vh
+    x2=sum(x[i:i+256].square().sum(dtype=torch.float64) for i in range(0,len(x),256))
+    history=[];initial=None;previous=None;converged=False;start=time.time()
+    for it in range(1,1001):
+        xg=x@g.T;f*=xg/(f@(g@g.T)).clamp_min(1e-10)
+        fx=f.T@x;g*=fx/((f.T@f)@g).clamp_min(1e-10)
+        if it==1 or it%10==0:
+            # ||X-FG||^2, evaluated without forming another dense N-by-N matrix.
+            err=torch.sqrt((x2-2*(g*fx).sum(dtype=torch.float64)+((f.T@f)*(g@g.T)).sum(dtype=torch.float64)).clamp_min(0)).item()
+            if initial is None:initial=err
+            history.append(dict(iteration=it,error=err,seconds=time.time()-start))
+            save(folder/'fit_progress.json',dict(history=history,rank=rank,negative_FC_fraction=negative))
+            status('NMF_fit',iteration=it,error=err)
+            print('NMF',it,err,time.time()-start,flush=True)
+            if previous is not None and 0<=(previous-err)/initial<1e-4:
+                converged=True;break
+            previous=err
+    features=f.cpu().numpy();np.save(folder/'embedding.npy',features)
+    del x,f,g,xg,fx;torch.cuda.empty_cache()
+    for k in [50,100,150,200]:
+        status('NMF_Kmeans',K=2*k)
+        km=KMeans(n_clusters=k,n_init=10,max_iter=300,tol=1e-4,random_state=SEED)
+        labels=km.fit_predict(features).astype('int32');assert len(np.unique(labels))==k
+        np.save(folder/f'labels_L_{k}.npy',labels)
+    save(folder/'complete.json',dict(rank=rank,initialization='NNDSVDa, randomized range with two power iterations',
+        solver='multiplicative updates for Frobenius NMF',max_iter=1000,tolerance=1e-4,iterations=it,converged=converged,
+        feature='positive part of signed training-group Pearson FC, diagonal zero; no VAE embedding',
+        training_subjects=500,clustering='NMF32 loadings + Kmeans; n_init10, seed20261008',history=history,
+        negative_FC_fraction=negative,source_fc_sha256=digest(D/'fc_train_L.npy')))
+
+@torch.no_grad()
+def low_rank_metrics(y,labels,gram=None,profile_norm=None):
+    """Exact size-weighted H and full-FC-profile cosine silhouette."""
+    t,n=y.shape
+    lab=torch.as_tensor(np.unique(labels,return_inverse=True)[1],device=y.device,dtype=torch.long)
+    counts=torch.bincount(lab);k=len(counts)
+    sums=torch.zeros(t,k,device=y.device,dtype=y.dtype);sums.index_add_(1,lab,y)
+    diagonal=(y*y).mean(0)
+    intra=(sums*sums).sum(0)/t
+    diag_sums=torch.zeros(k,device=y.device,dtype=y.dtype);diag_sums.index_add_(0,lab,diagonal)
+    valid=counts>1
+    hom=((intra-diag_sums)[valid]/(counts[valid]-1)).sum()/counts[valid].sum()
+    if gram is None:gram=y@y.T
+    if profile_norm is None:profile_norm=((y*(gram@y)).sum(0).clamp_min(1e-12).sqrt()/t)
+    weighted_sums=torch.zeros(t,k,device=y.device,dtype=y.dtype)
+    weighted_sums.index_add_(1,lab,y/profile_norm[None,:])
+    similarities=y.T@(gram@weighted_sums)/(t*t)/profile_norm[:,None]
+    distances=(1-similarities/counts[None,:]).clamp_min(0)
+    rows=torch.arange(n,device=y.device);own=counts[lab]
+    a=distances[rows,lab]*own/(own-1).clamp_min(1)
+    distances[rows,lab]=torch.inf;b=distances.min(1).values
+    sil=(b-a)/torch.maximum(a,b).clamp_min(1e-12);sil[own==1]=0
+    return dict(homogeneity=float(hom),cosine_silhouette=float(sil.mean()))
+
+def dcbc_coefficients(distance,labels):
+    """Upper-triangle local pairs give exactly the same official DCBC weighting."""
+    n=len(distance);ii=[];jj=[];bb=[]
+    for begin in range(0,n,256):
+        d=np.asarray(distance[begin:begin+256]);i,j=np.nonzero((d>0)&(d<=35))
+        keep=j>i+begin;i=i[keep];j=j[keep]
+        ii.append((i+begin).astype('int32'));jj.append(j.astype('int32'));bb.append((np.ceil(d[i,j])-1).astype('uint8'))
+    i,j,b=np.concatenate(ii),np.concatenate(jj),np.concatenate(bb);coefs=[]
+    for v in labels.values():
+        cat=b+35*(v[i]==v[j]).astype('uint8');c=np.bincount(cat,minlength=70).astype(float)
+        within,between=c[35:],c[:35];ok=(within>0)&(between>0)
+        weight=np.zeros(35);weight[ok]=within[ok]*between[ok]/(within[ok]+between[ok]);weight/=weight.sum()
+        lut=np.r_[-np.divide(weight,between,out=np.zeros(35),where=between>0),np.divide(weight,within,out=np.zeros(35),where=within>0)]
+        coefs.append(lut[cat].astype('float32'))
+    return i,j,np.stack(coefs)
+
+def tests():
+    from sklearn.metrics import silhouette_score
+    rng=np.random.default_rng(19);raw=rng.normal(size=(37,73)).astype('float32');raw-=raw.mean(0);raw/=raw.std(0)
+    y=torch.tensor(raw);labels=np.r_[np.arange(72)%4,4];fc=raw.T@raw/len(raw)
+    r=low_rank_metrics(y,labels)
+    assert abs(r['homogeneity']-functional_homogeneity(labels,fc))<2e-6
+    assert abs(r['cosine_silhouette']-exact_cosine_silhouette(fc,labels))<2e-6
+    assert abs(r['cosine_silhouette']-silhouette_score(fc,labels,metric='cosine'))<2e-6
+    xyz=rng.uniform(0,40,(73,3));d=np.linalg.norm(xyz[:,None]-xyz[None,:],axis=2).astype('float32')
+    i,j,c=dcbc_coefficients(d,{'toy':labels})
+    assert abs(float(c@fc[i,j])-dcbc_from_standardized_fc(fc,d,labels)['dcbc'])<2e-7
+    print('PASS exact FC-profile factorization, H, singleton handling and upper-triangle DCBC against explicit matrices',flush=True)
+
+def main(args):
+    OUT.mkdir(exist_ok=True);lock=(OUT/'workflow.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    torch.set_num_threads(4);threadpool_limits(4);tests()
+    device=torch.device('cuda:0');torch.cuda.set_per_process_memory_fraction(.30)
+    torch.backends.cuda.matmul.allow_tf32=False
+    split=json.loads((D/'subjects.json').read_text());rows=split['test']
+    test={r['subject'] for r in rows};train={r['subject'] for r in split['train']}
+    vaetrain={r['subject'] for r in json.loads((W/'runs/fullfc450_crossday_v1/subjects.json').read_text())['train']}
+    assert len(rows)==50 and not test&train and not test&vaetrain
+    fit_nmf(device)
+    mapping0=np.load(D/'mapping.npz');mapping={h:{key:mapping0[h+'_'+key] for key in ['columns','vertices']} for h in ['L','R']}
+    vertices=mapping['L']['vertices'];labels={};sources={}
+    for K in [100,200,300,400]:
+        k=K//2
+        paths={'NMF':OUT/f'NMF/labels_L_{k}.npy','DRFC':D/f'labels_L_{k}.npy','CoBRA':W/f'runs/corrected_personal_multires_20261006_v1/priors/L/{k}/labels.npy'}
+        labels[f'Schaefer_{K}']=atlas_labels(k,'L',vertices)
+        for method,path in paths.items():labels[f'{method}_{K}']=np.load(path)+1;sources[f'{method}_{K}']=dict(path=str(path),sha256=digest(path))
+    mask=np.logical_and.reduce([v>0 for v in labels.values()]);ids=np.flatnonzero(mask)
+    labels={m:v[mask] for m,v in labels.items()};np.save(OUT/'evaluation_mask_L.npy',mask)
+    np.savez_compressed(OUT/'group_labels.npz',**{m:np.load(Path(sources[m]['path'])) for m in sources})
+    protocol=dict(subjects=[r['subject'] for r in rows],n=50,hemisphere='L',K_bilateral=[100,200,300,400],methods=['Schaefer','NMF','DRFC','CoBRA'],
+        evaluation='individual REST1_LR, no fitting on test data',bandpass_Hz=[.01,.1],
+        support='common assigned left cortical support across four Schaefer resolutions and all learned maps',evaluated_vertices=len(ids),
+        H='size-weighted within-parcel mean off-diagonal Pearson correlation',
+        silhouette='exact cosine silhouette of complete same-hemisphere FC profiles, using an algebraically exact factorization',
+        DCBC='fixed training-mean geodesics, (lower,upper] 1mm bins to35mm; standardized BOLD; upper-triangle equivalent official weighting',
+        inference_unit='one participant, not parcels or vertices',
+        statistics='two-sided paired Wilcoxon against CoBRA for each K and metric; Holm correction across all36 primary comparisons',
+        train_counts=dict(NMF=500,DRFC=500,CoBRA=450),training_test_overlap=0,label_sources=sources,code_sha256=digest(Path(__file__)),
+        RNcut='not inserted until native-equivalence validation is available; no generic spectral substitute')
+    save(OUT/'protocol.json',protocol)
+    status('DCBC_local_pairs_precompute')
+    distance=np.load(D/'distances_L.npy',mmap_mode='r')[np.ix_(ids,ids)]
+    ii,jj,coef=dcbc_coefficients(distance,labels);del distance
+    n=len(ids);order=np.argsort(ii,kind='stable');ii,jj,coef=ii[order],jj[order],coef[:,order]
+    print('LOCAL_PAIRS',len(ii),'COEF_GB',coef.nbytes/1e9,flush=True)
+    reports=[]
+    for index,row in enumerate(rows):
+        dest=OUT/'participants'/f'{row["subject"]}.json'
+        if dest.exists():reports.append(json.loads(dest.read_text()));continue
+        status('subject_filter_and_source_check',subject=row['subject'],index=index+1,total=50)
+        ts,provenance=filtered_timeseries(row,mapping,{'use_verified_practice_cache':True})
+        ts=ts[:,:len(vertices)][:,mask];ts-=ts.mean(0);ts/=ts.std(0).clip(1e-8)
+        y=torch.as_tensor(np.ascontiguousarray(ts),device=device);del ts
+        gram=y@y.T;norm=((y*(gram@y)).sum(0).clamp_min(1e-12).sqrt()/len(y))
+        rec=dict(subject=row['subject'],source=provenance,metrics={})
+        for name,v in labels.items():
+            status('subject_H_and_FC_profile_silhouette',subject=row['subject'],index=index+1,method=name)
+            rec['metrics'][name]=low_rank_metrics(y,v,gram,norm)
+        values=np.empty(len(ii),dtype='float32')
+        for begin in range(0,n,256):
+            end=min(begin+256,n);a,b=np.searchsorted(ii,[begin,end])
+            block=(y[:,begin:end].T@y)/len(y)
+            values[a:b]=block[torch.as_tensor(ii[a:b]-begin,device=device,dtype=torch.long),torch.as_tensor(jj[a:b],device=device,dtype=torch.long)].cpu().numpy()
+        dcbcs=coef@values
+        for name,v in zip(labels,dcbcs):rec['metrics'][name]['DCBC_x100']=float(v*100)
+        del y,gram,norm,values;torch.cuda.empty_cache()
+        save(dest,rec);reports.append(rec)
+        save(OUT/'progress.json',dict(completed=index+1,total=50,last_subject=row['subject'],updated_unix=time.time()))
+        print('SUBJECT_COMPLETE',index+1,row['subject'],flush=True)
+    comparisons=[]
+    for K in [100,200,300,400]:
+        for metric in ['homogeneity','DCBC_x100','cosine_silhouette']:
+            a=np.array([r['metrics'][f'CoBRA_{K}'][metric] for r in reports])
+            for method in ['Schaefer','NMF','DRFC']:
+                b=np.array([r['metrics'][f'{method}_{K}'][metric] for r in reports]);diff=a-b
+                p=float(wilcoxon(diff,alternative='two-sided',zero_method='wilcox',method='auto').pvalue) if np.any(diff) else 1.
+                comparisons.append(dict(K=K,metric=metric,comparator=method,p_raw=p,n=len(a),median_paired_difference=float(np.median(diff)),mean_paired_difference=float(diff.mean())))
+    order=np.argsort([c['p_raw'] for c in comparisons]);adjusted=np.maximum.accumulate([(len(order)-j)*comparisons[i]['p_raw'] for j,i in enumerate(order)])
+    for i,p in zip(order,adjusted):comparisons[i]['p_holm']=min(1,float(p))
+    save(OUT/'summary.json',dict(state='complete',protocol=protocol,participants=reports,comparisons=comparisons,completed_unix=time.time()))
+    save(OUT/'status.json',dict(state='complete',participants=50,pid=os.getpid(),updated_unix=time.time()))
+    print('COMPLETE',OUT,flush=True)
+
+if __name__=='__main__':
+    ap=argparse.ArgumentParser();ap.add_argument('--test',action='store_true');args=ap.parse_args()
+    if args.test:tests()
+    else:
+        try:main(args)
+        except Exception as e:save(OUT/'status.json',dict(state='failed',error=repr(e),traceback=traceback.format_exc(),pid=os.getpid()));raise
+

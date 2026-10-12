@@ -1,0 +1,30 @@
+{
+  "code_root": "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA",
+  "work_root": "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA_Rerun/submission_check_001",
+  "raw_YA": "/dataspace/yuhang_data/HCP-YA",
+  "raw_Retest": "/dataspace/yuhang_data/HCP-Retest",
+  "ancillary_input_root": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/resources",
+  "template_root": "/home/yuhang/.cache/templateflow/tpl-fsLR",
+  "workbench": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/coarse_network18_20261008/tools/workbench/bin_linux64/wb_command",
+  "task_input_root": "/dataspace/yuhang_data/IndividualFunctionalParcellation/GPT_workplace/resources/task_individual",
+  "gpu": "0",
+  "bandpass_hz": [
+    0.01,
+    0.1
+  ],
+  "hemispheres": [
+    "L",
+    "R"
+  ],
+  "K_bilateral": [
+    100,
+    200,
+    300,
+    400
+  ],
+  "personal_steps": 30,
+  "group_prior_steps": 1000,
+  "seed": 20260930,
+  "allow_old_results": false,
+  "notes": "Frozen identities are protocol metadata. All derived arrays, models, labels and QC are regenerated under work_root."
+}

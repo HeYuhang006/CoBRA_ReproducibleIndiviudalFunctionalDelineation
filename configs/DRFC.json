@@ -1,0 +1,26 @@
+{
+  "name": "full500_MSMAll_samplez",
+  "train_subjects": 500,
+  "validation_subjects": 42,
+  "test_subjects": 50,
+  "epochs": 200,
+  "checkpoint_every": 5,
+  "hemispheres": [
+    "L",
+    "R"
+  ],
+  "clusters_per_hemisphere": [
+    50,
+    100,
+    150,
+    200
+  ],
+  "try_subject_surfaces": true,
+  "allow_template_geometry": false,
+  "surface_registration": "MSMAll",
+  "use_verified_practice_cache": false,
+  "contrastive": true,
+  "contrast_latent": "sample",
+  "seed": 20260930,
+  "gpu": "0"
+}

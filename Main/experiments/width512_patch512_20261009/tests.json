@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "all_entry_loss_and_all_parameter_gradients": [
+    {
+      "runs": 1,
+      "cross": false,
+      "projection_max_error": 1.6653345369377348e-16,
+      "gradient_max_error": 1.3877787807814457e-17
+    },
+    {
+      "runs": 2,
+      "cross": true,
+      "projection_max_error": 1.6653345369377348e-16,
+      "gradient_max_error": 1.3877787807814457e-17
+    },
+    {
+      "runs": 4,
+      "cross": true,
+      "projection_max_error": 2.220446049250313e-16,
+      "gradient_max_error": 2.7755575615628914e-17
+    }
+  ],
+  "token512_forward_backward": true,
+  "source_sha256": {
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/experiments/width512_patch512_20261009/s_step2_train_trial.py": "92d2757698495e1c862863e6caeccbee4aabd42ccfc73d03f82b2e32f068f7a1",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/01_data/f_data.py": "762d96920340c62d3bba79a47f9cd33c92422300f98805a3b8c63e6f3792f4f7",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/05_individual/f_pipeline.py": "2da9054110bae4d3abc06fdb1b09bb9bcf177bdc2a530bb68cfec674b76d691b",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/02_network/f_model_ops.py": "fb2ef0b5aec413634f16a030ce94b8e9326a403198c1ebe76c69085073313bc9",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/02_network/f_surface_prior_vae.py": "190ce106fa89e43d6e2f7af66ca69043058adcadcffab27bd738a2f41c297ef7",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/04_parcellation/f_connectivity.py": "60a4cf1c93329d60442358b962db75817e88cb46e461ae5d8452df1aa3dcc87b",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/06_validation/f_metrics.py": "23f07b0e693e1f136e049424fc23aec0fef62f73f4ca803ae6ed90c555f48e42",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/02_network/f_full_fc_vae.py": "82cb957696c4c5da2367d28eb1e96dd530a03060f743328f8e8fe59d41716091",
+    "/dataspace/yuhang_data/IndividualFunctionalParcellation/CoBRA/Main/experiments/width512_patch512_20261009/f_capacity_vae.py": "b67c648be5a47f32d68bfbe87ac0800add7e00c58622b0a32f7f5c081e86d9e2"
+  }
+}

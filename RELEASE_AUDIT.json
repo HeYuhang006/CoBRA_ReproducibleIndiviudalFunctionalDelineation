@@ -1,0 +1,100 @@
+{
+  "source_snapshot_date": "2026-10-12",
+  "passed": true,
+  "local_source_and_CLI_checks": {
+    "passed": true,
+    "python_AST_files": 103,
+    "resolved_routes": 43,
+    "dry_run_entrypoints": 40,
+    "optional_NMF_dry_run": true,
+    "cohort_counts": {
+      "VAE_train": 450,
+      "YA_validation_preQC": 400,
+      "Retest_preQC": 36
+    },
+    "train_validation_disjoint": true,
+    "bandpass_hz": [
+      0.01,
+      0.1
+    ],
+    "no_excluded_binary_inputs": true,
+    "high_confidence_secret_scan_passed": true,
+    "production_snapshot_naming_exceptions": [
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_capture_k300_context_20261012.py",
+        "functions": [
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_diagnose_k400_initialization_20261012.py",
+        "functions": [
+          "verify",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_diagnose_labelcost_20261011.py",
+        "functions": [
+          "sha",
+          "save",
+          "frozen",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_evaluate_accepted_revision_20261012.py",
+        "functions": [
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_finish_repaired_rncut_20261012.py",
+        "functions": [
+          "state",
+          "module",
+          "ready",
+          "finish",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_fix_k300_initialization_20261012.py",
+        "functions": [
+          "verify",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_fix_k300_initialization_v2_20261012.py",
+        "functions": [
+          "verify",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_independent_k400_20261011.py",
+        "functions": [
+          "verify",
+          "main"
+        ]
+      },
+      {
+        "path": "TraditionalMethod/experiments/group_nmf_rncut_20261009/s_queue_k300_repair_20261012.py",
+        "functions": [
+          "main"
+        ]
+      }
+    ],
+    "release_manifest_checked": false,
+    "limitation": "Source/CLI audit only; no MRI processing or full experimental rerun performed."
+  },
+  "NMF_numerical_function_AST_equivalence": true,
+  "remote_CPU_numerical_checks": "docs/provenance/release_CPU_numerical_check.json",
+  "full_FC_losses_and_gradients": "passed for2/4 independent runs; dense versus exact algebra",
+  "connected_decoding_and_K_generic": "passed",
+  "ICC_FD_and_area_weighted_FC": "passed",
+  "full_data_rerun_performed": false,
+  "missing_external_inputs_are_not_tested": true,
+  "manifest_note": "Manifest is generated after this audit receipt. Run Common/s_step0_audit_release.py again to verify all listed file hashes."
+}

@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-09",
+  "source_modules": 42,
+  "manual_entries": 40,
+  "all_owned_modules_imported_on_server": true,
+  "all_40_manual_CLI_dry_runs_passed": true,
+  "full_FC_2_and_4_run_loss_projection_gradients": true,
+  "maximum_FP64_projection_difference": 1.3322676295501878e-15,
+  "network_state_dict_and_outputs_match_original": true,
+  "network_output_max_error": 0.0,
+  "connected_inference_mechanism_tests": true,
+  "ICC_FD_area_weighted_FC_tests": true,
+  "native_PPT_polygon_boxplot_export_test": true,
+  "PPT_test_picture_objects": 0,
+  "PPT_test_used_only_synthetic_data": true,
+  "full_scientific_rerun_started": false,
+  "existing_results_moved": false,
+  "figure_dependencies": "python-pptx/shapely tested in isolated temporary folder; install .deps before step7 as documented",
+  "scope": "Numerical, import and organization audit; full raw-data rerun remains manual."
+}

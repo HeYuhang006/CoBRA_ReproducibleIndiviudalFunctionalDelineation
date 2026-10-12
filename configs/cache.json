@@ -1,0 +1,40 @@
+{
+  "name": "modulated_vae_full_crossday_v1",
+  "gpu": "0",
+  "hemispheres": [
+    "L",
+    "R"
+  ],
+  "train_limit": null,
+  "validation_limit": null,
+  "anchors": 128,
+  "parcels_per_hemisphere": 50,
+  "width": 64,
+  "latent_dim": 32,
+  "attention_layers": 2,
+  "group_steps": 1000,
+  "individual_epochs": 50,
+  "validation_every": 5,
+  "checkpoint_subjects": 50,
+  "donors_per_validation_subject": 3,
+  "learning_rate_group": 0.0003,
+  "learning_rate_individual": 0.0001,
+  "prior_kl_weight": 0.005,
+  "alignment_weight": 0.05,
+  "homogeneity_weight": 0.1,
+  "seed": 20260930,
+  "bandpass_hz": [
+    0.01,
+    0.1
+  ],
+  "distance_residualization": false,
+  "group_reference_sessions": [
+    "rfMRI_REST1_LR"
+  ],
+  "individual_sessions": [
+    "rfMRI_REST1_LR",
+    "rfMRI_REST2_LR"
+  ],
+  "notes": "Group-conditioned surface graph CNN and patch-transformer VAE. Group prior from training REST1 only; both subject sessions paired during shared fine-tuning. Original 500-subject MLP remains independent.",
+  "use_verified_practice_cache": false
+}
