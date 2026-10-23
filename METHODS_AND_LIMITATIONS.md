@@ -1,8 +1,12 @@
+Scope: this document describes the released 450-participant population and 128-wide personal workflow and its historical development experiments. Later 500-participant and fixed-decoder experiments use separate code, weights, maps and results; they are not the source of the historical results described here.
+
 # Method definitions retained by this package
 
 **Population model**: full within-hemisphere N×N FC; exact algebraic projection retains every FC entry. Width64, latent32; two residual surface convolutions; 128 mean-pooled *learned-feature* context tokens; two 4-head Transformer layers; vertex VAE. Group1000 steps; shared450-person cross-day50 epochs. The 128 tokens do not truncate the full-FC input.
 
 **Personal model**: separately trained width128 neural group prior, same graph/token topology and latent32;1000 group steps. Reset all active weights from that prior for each independent personal fit. Thirty steps, lr2e-4; all ordered distinct-run reconstruction pairs, posterior-mean consistency, group/core/mesh/parameter regularizers. LR/RL observations are combined in the fit but remain independent runs in the reconstruction objective.
+
+**Network versions and fusion**: Population uses width64 and128 context tokens, the personal neural group prior uses width128 and128 tokens, and the separate12-person development experiment uses width512 and512 tokens. All use latent32. Population keeps the group/individual-minus-group input interface; the personal model projects direct full FC. After two residual mesh-convolution layers and two4-head Transformer layers, context features are broadcast back by patch membership. Fusion is `H_local + sigmoid(a) W_o U_p(v)`, where `a` is one learned scalar initialized to-2. Both summands have the current feature width. Separate VAE heads then map to32 dimensions. Personal fitting enables gradients for the full copied model, including the decoder, and optimizes `model.parameters()` at lr2e-4.
 
 **Group parcellation**: encode training-group FC at completed population checkpoint. Concatenate μ32 and standardized LPE5 with weight1, K-means10 starts/300 iterations, independent resolutions. Connected seeded assignment, local polish, training-group raw functional objective, monotone connected boundary moves. No validation participant contributes to fitting this prior.
 
@@ -21,3 +25,5 @@
 **Reproducibility / specificity**: fixed group atlas ARI=1 by construction. Intra similarity must be considered alongside inter similarity and their gap; larger inter variance alone can reflect noise. Participant resampling avoids treating subject pairs or FC edges as independent people; tie-aware identification gives a fixed atlas chance rather than100% accuracy.
 
 This package is a code organization and fresh-rerun entry point. It does not establish that CoBRA outperforms all baselines, that every live validation has finished, or that GPIP outer-loop convergence has been demonstrated. Such claims require the actual rerun outputs and fair paired comparisons.
+
+**Completed matched application extension**: The author-GPIP left50-parcel/36-person task and FC extensions and their six-method Group control are complete in the separately audited production directories. The numbered rerun GPIP/Wang stage6 guards still apply to unsupported portable/bilateral application paths. FC policies mean fixed Day1 maps versus independently fitted maps per visit; both use independent REST2 measurements.
